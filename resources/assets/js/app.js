@@ -33,6 +33,7 @@ Vue.component('favorite', require('./components/Favorite.vue'));
 Vue.component('paginator', require('./components/Paginator.vue'));
 Vue.component('subscribe-button', require('./components/SubscribeButton.vue'));
 Vue.component('user-notifications', require('./components/UserNotifications.vue'));
+Vue.component('avatar-form', require('./components/AvatarForm.vue'));
 
 
 

@@ -28789,6 +28789,7 @@ Vue.component('favorite', __webpack_require__(16));
 Vue.component('paginator', __webpack_require__(196));
 Vue.component('subscribe-button', __webpack_require__(144));
 Vue.component('user-notifications', __webpack_require__(199));
+Vue.component('avatar-form', __webpack_require__(212));
 
 var app = new Vue({
   el: '#app'
@@ -65225,6 +65226,176 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */,
+/* 207 */,
+/* 208 */,
+/* 209 */,
+/* 210 */,
+/* 211 */,
+/* 212 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(213)
+/* template */
+var __vue_template__ = __webpack_require__(214)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/AvatarForm.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-78f014b4", Component.options)
+  } else {
+    hotAPI.reload("data-v-78f014b4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 213 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['user'],
+
+    data: function data() {
+        return {
+            avatar: ''
+        };
+    },
+
+
+    computed: {
+        canUpdate: function canUpdate() {
+            var _this = this;
+
+            return this.authorize(function (user) {
+                return user.id === _this.user.id;
+            });
+            // the user.id from the app.js, same as the props user.id?
+            // returns a boolean
+        }
+    },
+
+    methods: {
+        onChange: function onChange(e) {
+            var _this2 = this;
+
+            console.log(e);
+            if (!e.target.files.length) return;
+            var avatar = e.target.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(avatar);
+            reader.onload = function (e) {
+                //console.log(e);
+                _this2.avatar = e.target.result;
+            };
+            //persist to server
+            this.persist(avatar);
+        },
+        persist: function persist(avatar) {
+            var data = new FormData();
+
+            data.append('avatar', avatar);
+
+            axios.post('/api/users/' + this.user.name + '/avatar', data).then(function () {
+                return flash('Avatar uploaded!');
+            });
+            //
+        }
+    }
+});
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("h1", { domProps: { textContent: _vm._s(_vm.user.name) } }),
+    _vm._v(" "),
+    _vm.canUpdate
+      ? _c(
+          "form",
+          { attrs: { method: "POST", enctype: "multipart/form-data" } },
+          [
+            _c("input", {
+              attrs: { type: "file", name: "avatar", accept: "image/*" },
+              on: { change: _vm.onChange }
+            })
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _c("img", { attrs: { src: _vm.avatar, width: "50", height: "50" } })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-78f014b4", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

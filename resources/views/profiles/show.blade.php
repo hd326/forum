@@ -5,24 +5,22 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="page-header">
-                <h1>
-                    {{ $profileUser->name }}
+                
+            <avatar-form :user="{{ $profileUser }}"></avatar-form>
+            {{--<div>
+                <h1 v-text="user.name">
+                    
                     <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
                 </h1>
-
-                @can('update', $profileUser)
-
-                {{-- <form method="POST" action="/api/users/{{ $profileUser->id }}/avatar"> --}}
-                <form method="POST" action="{{ route('avatar', $profileUser) }}" enctype="multipart/form-data">
+            
+                <form v-if="canUpdate" method="POST" action="{{ route('avatar', $profileUser) }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="file" name="avatar">
                     <button type="submit" class="btn btn-primary">Add Avatar</button>
                 </form>
-
-                @endcan
-
-                <img src="/storage/{{ $profileUser->avatar_path }}" width="50" height="200">
-
+            
+                <img src="/storage/{{ $profileUser->avatar() }}" width="50" height="50">
+            </div>--}}
             </div>
             {{-- @foreach ($profileUser->threads as $thread) --}}
             {{-- @foreach ($threads as $thread) --}}
