@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('header')
+<link rel="stylesheet" href="/css/vendor/jquery.atwho.css">
+@endsection
+
 @section('content')
 <thread-view :initial-replies-count="{{ $thread->replies_count }}" inline-template>
     <div class="container">
@@ -9,6 +13,9 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="level">
+                            {{--@if($thread->creator->avatar_path)--}}
+                            <img src="{{ $thread->creator->avatar() }}" width="25" height="25" class="mr-1">
+                            {{--@endif--}}
                             <span class="flex"><a
                                     href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a>
                                 posted:
@@ -41,13 +48,12 @@
 
                 {{-- @if (auth()->check())
                 <form method="POST" action="{{ $thread->path() }}/replies">
-                    {{ csrf_field() }}
-                    <div class="form-group">
-                        <textarea name="body" id="body" class="form-control" placeholder="Have something to say?"
-                            rows="5">
+                {{ csrf_field() }}
+                <div class="form-group">
+                    <textarea name="body" id="body" class="form-control" placeholder="Have something to say?" rows="5">
                     </textarea>
-                    </div>
-                    <button type="submit" class="btn btn-default">Post</button>
+                </div>
+                <button type="submit" class="btn btn-default">Post</button>
                 </form>
                 @else
                 <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this
@@ -66,7 +72,8 @@
                         </p>
 
                         <p>
-                        <subscribe-button :active="{{ $thread->isSubscribedTo ? 'true' : 'false' }}"></subscribe-button>
+                            <subscribe-button :active="{{ $thread->isSubscribedTo ? 'true' : 'false' }}">
+                            </subscribe-button>
                         </p>
                     </div>
                 </div>

@@ -2,19 +2,23 @@
     <div>
         <div v-if="signedIn">
             <div class="form-group">
-                <textarea name="body" id="body" class="form-control" placeholder="Have something to say?" v-model="body" required rows="5">
+                <textarea name="body" id="body" class="form-control" placeholder="Have something to say?" v-model="body"
+                    required rows="5">
             </textarea>
             </div>
             <button type="submit" class="btn btn-default" @click="addReply">Post</button>
         </div>
 
         <p class="text-center" v-else>Please <a href="/login">sign in</a> to participate in this
-                    discussion
+            discussion
         </p>
     </div>
 </template>
 
 <script>
+import 'jquery.caret';
+import 'at.js';
+
     export default {
 
         //props: ['endpoint'],
@@ -31,6 +35,28 @@
             }
         },
 
+        mounted() {
+            $('#body').atwho({
+                at: "@",
+                delay: 750,
+                callbacks: {
+                    /*
+                     If function is given, At.js will invoke it if local filter can not find any data
+                     @param query [String] matched query
+                     @param callback [Function] callback to render page.
+                    */
+                    remoteFilter: function (query, callback) {
+                        //console.log('called');
+                        $.getJSON("/api/users", {
+                            name: query
+                        }, function (usernames) {
+                            callback(usernames)
+                        });
+                    }
+                }
+            });
+        },
+
         methods: {
             addReply() {
                 axios.post(location.pathname + '/replies', {
@@ -42,7 +68,9 @@
                         //were basically using a function here to access a route
                         //and then using the data in the body here to send to the server 
                     })
-                    .then(({data}) => {
+                    .then(({
+                        data
+                    }) => {
                         this.body = '';
 
                         flash('Your reply has been posted.');

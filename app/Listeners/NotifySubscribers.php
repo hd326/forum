@@ -20,8 +20,8 @@ class NotifySubscribers
         // in Thread we use addReply which takes $reply
         // so if we want to use get the thread we use eloquent relationship
         $thread->subscriptions
-        ->where('user_id', '!=', $event->$reply->user_id)
+        ->where('user_id', '!=', $event->reply->user_id)
         ->each
-        ->notify($event->$reply);
+        ->notify($event->reply);
     }
 }

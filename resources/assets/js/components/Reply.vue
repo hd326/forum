@@ -27,11 +27,13 @@
 
         <div class="panel-body">
             <div v-if="editing">
-                <textarea class="form-control" v-model="body"></textarea>
-                <button class="btn btn-xs btn-link" @click="update">Update</button>
-                <button class="btn btn-xs btn-link" @click="editing = false">Cancel</button>
+                <form @submit="update">
+                <textarea class="form-control" v-model="body" required></textarea>
+                <button class="btn btn-xs btn-link">Update</button>
+                <button class="btn btn-xs btn-link" @click="editing = false" type="button">Cancel</button>
+                </form>
             </div>
-            <div v-else v-text="body">
+            <div v-else v-html="body">
                 <!--{{--<div class="body">{{ $reply->body }}</div>--}}-->
             </div>
 
