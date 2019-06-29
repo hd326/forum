@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Redis;
 use App\Filters\ThreadFilters;
 use App\Channel;
 use App\Thread;
 use App\Reply;
+use App\Trending;
 use Illuminate\Http\Request;
 
 class ThreadController extends Controller
@@ -22,7 +24,7 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Channel $channel/*$channelSlug = null*/, ThreadFilters $filters)
+    public function index(Channel $channel/*$channelSlug = null*/, ThreadFilters $filters, Trending $trending)
     {
         //$this->validate(request(), [
         //    'title' => 'required'
@@ -43,6 +45,8 @@ class ThreadController extends Controller
         //$threads = $this->getThreads($channel);
 
         //$threads = Thread::filter($filters)->get();
+
+
         $threads = $this->getThreads($channel, $filters);
 
         // interchangeable
@@ -65,7 +69,17 @@ class ThreadController extends Controller
             return $threads;
         }
 
-        return view('threads.index', compact('threads'));
+        //$trending = collect(Redis::zrevrange('trending_threads', 0, -1))->map(function ($thread) {
+        //    return json_decode($thread);
+        //});
+
+        //$trending = array_map('json_decode', Redis::zrevrange('trending_threads', 0, 4));
+
+        // return view('threads.index', compact('threads', 'trending'));
+        return view('threads.index', [
+            'threads' => $threads,
+            'trending' => $trending->get()
+            ]);
     }
 
 
@@ -117,12 +131,29 @@ class ThreadController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function show($channelId, Thread $thread)
+    public function show($channelId, Thread $thread, Trending $trending)
     {
         // return $thread;
         // Route Model Binding
         // return $thread->load('replies');
         // dd($thread);
+
+        // Redis::zincrby('trending_threads', 1, $thread->id);
+        // we can use JSON request to never make database query
+        // $thread->id would be
+        // json_encode(['title => $thread->title, 'path' => $thread->path])
+
+        //Redis::zincrby('trending_threads', 1, json_encode([
+        //    'title' => $thread->title,
+        //    'path' => $thread->path()
+        //]));
+
+        $trending->push($thread);
+
+        //$thread->recordVisit();
+        //$thread->visits()->record();
+        $thread->increment('visits');
+
         return view('threads.show', [
             'thread' => $thread,
             'replies' => $thread->replies()

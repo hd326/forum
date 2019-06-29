@@ -14,7 +14,7 @@
                     <div class="panel-heading">
                         <div class="level">
                             {{--@if($thread->creator->avatar_path)--}}
-                            <img src="{{ $thread->creator->avatar() }}" width="25" height="25" class="mr-1">
+                            <img src="/storage/{{ $thread->creator->avatar() }}" width="25" height="25" class="mr-1">
                             {{--@endif--}}
                             <span class="flex"><a
                                     href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a>

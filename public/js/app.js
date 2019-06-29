@@ -28747,7 +28747,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(146);
-module.exports = __webpack_require__(202);
+module.exports = __webpack_require__(208);
 
 
 /***/ }),
@@ -28789,7 +28789,7 @@ Vue.component('favorite', __webpack_require__(16));
 Vue.component('paginator', __webpack_require__(196));
 Vue.component('subscribe-button', __webpack_require__(144));
 Vue.component('user-notifications', __webpack_require__(199));
-Vue.component('avatar-form', __webpack_require__(212));
+Vue.component('avatar-form', __webpack_require__(202));
 
 var app = new Vue({
   el: '#app'
@@ -62102,12 +62102,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['message'],
     data: function data() {
         return {
-            body: '',
+            //body: '',
+            body: this.message,
+            level: 'success',
             show: false
         };
     },
@@ -62115,7 +62121,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         if (this.message) {
-            this.flash(this.message);
+            this.flash();
         }
 
         window.events.$on('flash', function (message) {
@@ -62125,10 +62131,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
-        flash: function flash(message) {
-            this.body = message;
+        flash: function flash(data) {
+            if (data) {
+                this.body = data.message;
+                this.level = data.level;
+            }
             this.show = true;
-
             this.hide();
         },
         hide: function hide() {
@@ -62156,7 +62164,9 @@ var render = function() {
         { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
       ],
       staticClass: "alert alert-success alert-flash",
-      attrs: { role: "alert" }
+      class: "alert-" + _vm.level,
+      attrs: { role: "alert" },
+      domProps: { textContent: _vm._s(_vm.body) }
     },
     [_c("strong", [_vm._v("Success!")]), _vm._v(" " + _vm._s(_vm.body) + "\n")]
   )
@@ -62402,6 +62412,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.post(location.pathname + '/replies', {
                 body: this.body
+                //v-model="body"?
                 //i'm wondering why this doesn't need the much else
                 //i guess we assume the id, thread_id, and user_id already
                 //so if we post to this endpoint, this would mean we still
@@ -62412,11 +62423,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var data = _ref.data;
 
                 _this.body = '';
-
                 flash('Your reply has been posted.');
-
                 _this.$emit('created', data);
-
                 //which event would be need to fire when we post a reply?
             });
             // this is ES2015
@@ -65223,29 +65231,14 @@ if (false) {
 
 /***/ }),
 /* 202 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 203 */,
-/* 204 */,
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(213)
+var __vue_script__ = __webpack_require__(203)
 /* template */
-var __vue_template__ = __webpack_require__(214)
+var __vue_template__ = __webpack_require__(207)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -65284,11 +65277,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 213 */
+/* 203 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImageUpload_vue__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImageUpload_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ImageUpload_vue__);
 //
 //
 //
@@ -65308,13 +65303,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['user'],
 
+    components: { ImageUpload: __WEBPACK_IMPORTED_MODULE_0__ImageUpload_vue___default.a },
+
     data: function data() {
         return {
-            avatar: ''
+            avatar: '/storage/' + this.user.avatar_path
         };
     },
 
@@ -65332,20 +65338,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        onChange: function onChange(e) {
-            var _this2 = this;
-
-            console.log(e);
-            if (!e.target.files.length) return;
-            var avatar = e.target.files[0];
-            var reader = new FileReader();
-            reader.readAsDataURL(avatar);
-            reader.onload = function (e) {
-                //console.log(e);
-                _this2.avatar = e.target.result;
-            };
+        onLoad: function onLoad(avatar) {
             //persist to server
-            this.persist(avatar);
+            this.avatar = avatar.src;
+            this.persist(avatar.file);
         },
         persist: function persist(avatar) {
             var data = new FormData();
@@ -65361,7 +65357,111 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 214 */
+/* 204 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(205)
+/* template */
+var __vue_template__ = __webpack_require__(206)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ImageUpload.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-319f68d5", Component.options)
+  } else {
+    hotAPI.reload("data-v-319f68d5", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 205 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    methods: {
+        onChange: function onChange(e) {
+            var _this = this;
+
+            if (!e.target.files.length) return;
+            var avatar = e.target.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(avatar);
+            reader.onload = function (e) {
+                //console.log(e);
+                var src = e.target.result;
+                _this.$emit('loaded', {
+                    src: e.target.result,
+                    file: avatar
+                });
+                //this.$emit('loaded', { src, avatar });
+                //this.avatar = e.target.result;
+            };
+        }
+    }
+});
+
+/***/ }),
+/* 206 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("input", {
+    attrs: { type: "file", accept: "image/*" },
+    on: { change: _vm.onChange }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-319f68d5", module.exports)
+  }
+}
+
+/***/ }),
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -65369,22 +65469,28 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", { domProps: { textContent: _vm._s(_vm.user.name) } }),
+    _c("div", { staticClass: "level" }, [
+      _c("img", {
+        staticClass: "mr-1",
+        attrs: { src: _vm.avatar, width: "50", height: "50" }
+      }),
+      _vm._v(" "),
+      _c("h1", { domProps: { textContent: _vm._s(_vm.user.name) } })
+    ]),
     _vm._v(" "),
     _vm.canUpdate
       ? _c(
           "form",
           { attrs: { method: "POST", enctype: "multipart/form-data" } },
           [
-            _c("input", {
-              attrs: { type: "file", name: "avatar", accept: "image/*" },
-              on: { change: _vm.onChange }
+            _c("image-upload", {
+              attrs: { name: "avatar" },
+              on: { loaded: _vm.onLoad }
             })
-          ]
+          ],
+          1
         )
-      : _vm._e(),
-    _vm._v(" "),
-    _c("img", { attrs: { src: _vm.avatar, width: "50", height: "50" } })
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -65396,6 +65502,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-78f014b4", module.exports)
   }
 }
+
+/***/ }),
+/* 208 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

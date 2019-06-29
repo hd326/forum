@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\User;
 
 class UserAvatarController extends Controller
 {
@@ -20,11 +19,14 @@ class UserAvatarController extends Controller
         ]);
 
         auth()->user()->update([
-            'avatar_path' => request()->file('avatar')->store('avatars', 'public')
+            'avatar_path' => request()->file('avatar')->store('/storage/avatars', 'public')
             //'avatar_path' => request()->file('avatar')->storeAs('avatars', 'avatars.jpg', 'public')
         ]);
 
         return back();
+
+        //return response([], 204);
+        // 204 means we're all good, message received, nothing to say, np
     }
 }
 

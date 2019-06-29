@@ -27,6 +27,10 @@ class User extends Authenticatable
         'password', 'remember_token', 'email'
     ];
 
+    protected $casts = [
+        'confirmed' => 'boolean'
+    ];
+
     public function getRouteKeyName()
     {
         //return parent::getRouteKeyName(); //defaults to primary key
@@ -43,9 +47,26 @@ class User extends Authenticatable
         return $this->hasMany(Activity::class);
     }
 
-    public function avatar()
+    public function confirm()
     {
-        return $this->avatar_path ?: '/avatars/default.jpg';
+        $this->confirmed = true;
+        $this->save();
+    }
+
+    //public function getAvatarPathAttribute($avatar) //$user->avatar_path
+    //{
+    //    // #2 return $this->avatar_path ?: 'avatars/default.jpg';
+    //    return asset($avatar ?: 'storage/avatars/default.jpg');
+    //    //if(! $this->avatar_path) {
+    //    //    return 'avatars/default.jpg';
+    //    //}
+    //    //return $this->avatar_path;
+    //}
+
+    public function avatar() //$user->avatar_path
+    {
+        // #2 return $this->avatar_path ?: 'avatars/default.jpg';
+        return $this->avatar_path;
         //if(! $this->avatar_path) {
         //    return 'avatars/default.jpg';
         //}

@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Mail\PleaseConfirmYourEmail;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
+
 
 class RegisterController extends Controller
 {
@@ -62,10 +66,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        return User::forceCreate([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'confirmation_token' => str_random(25),
         ]);
     }
+
+    protected function registered(Request $request, $user)
+    {
+        //cannot find RegisteredUsers, but he takes this function from there to create it
+        //sendconfirmationemailrequest is also here
+        //no event just the user...
+        Mail::to($user)->send(new PleaseConfirmYourEmail($user));
+        return redirect($this->redirectPath());
+    }
+
 }

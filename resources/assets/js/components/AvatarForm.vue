@@ -1,30 +1,41 @@
 <template>
 <div>
-    <h1 v-text="user.name">
-    </h1>
+
+    <div class="level">
+            <img :src="avatar" width="50" height="50" class="mr-1">
+                <h1 v-text="user.name">
+                </h1>
+    </div>
+   
 
     <form v-if="canUpdate" method="POST" enctype="multipart/form-data">
     <!--action omitted to perform w/ JavaScript-->
     <!--{{ csrf_field() }}-->
     <!--csrf is omitted and done is bootstrap.js-->
-        <input type="file" name="avatar" accept="image/*" @change="onChange">
+    <image-upload name="avatar" @loaded="onLoad"></image-upload>
+        
         <!--<button type="submit" class="btn btn-primary">Add Avatar</button>-->
         <!--this is omitted due to JS image-->
     </form>
 
-    <img :src="avatar" width="50" height="50">
+
 </div>
 </template>
 
 
 <script>
+
+import ImageUpload from './ImageUpload.vue';
+
     export default {
         props: ['user'],
 
+        components: { ImageUpload },
+
         data() {
             return {
-                avatar: '',
-            }
+                avatar: '/storage/' + this.user.avatar_path,
+            };
         },
 
         computed: {
@@ -36,18 +47,10 @@
         },
 
         methods: {
-            onChange(e) {
-                console.log(e);
-                if (! e.target.files.length) return;
-                let avatar = e.target.files[0];
-                let reader = new FileReader();
-                reader.readAsDataURL(avatar);
-                reader.onload = e => {
-                    //console.log(e);
-                    this.avatar = e.target.result;
-                };
+            onLoad(avatar) {
                 //persist to server
-                this.persist(avatar);
+                this.avatar = avatar.src;
+                this.persist(avatar.file);
             },
 
             persist(avatar){

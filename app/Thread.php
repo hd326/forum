@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Redis;
+use App\Visits;
 use App\Events\ThreadReceivedNewReply;
 use App\Filters\ThreadFilters;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     // added b/c mass assignment exception (array)
-    use RecordsActivity;
+    use RecordsActivity, RecordsVisits;
     
     protected $guarded = [];
 
@@ -167,5 +169,10 @@ class Thread extends Model
         return $this->subscriptions()
             ->where('user_id', auth()->id())
             ->exists();
+    }
+
+    public function visits()
+    {
+        return new Visits($this);
     }
 }
