@@ -50,7 +50,14 @@ class User extends Authenticatable
     public function confirm()
     {
         $this->confirmed = true;
+        $this->confirmation_token = null;
+        //for consistency
         $this->save();
+    }
+
+    public function isAdmin()
+    {
+        return in_array($this->name, ['JohnDoe', 'JaneDoe', 'Richard']);
     }
 
     //public function getAvatarPathAttribute($avatar) //$user->avatar_path

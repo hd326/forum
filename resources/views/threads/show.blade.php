@@ -5,7 +5,8 @@
 @endsection
 
 @section('content')
-<thread-view :initial-replies-count="{{ $thread->replies_count }}" inline-template>
+<thread-view :thread= {{ $thread }} inline-template>
+<!--<thread-view :data-replies-count="{{ $thread->replies_count }}" :data-locked="{{ $thread->locked }}" inline-template>-->
     <div class="container">
         <div class="row">
             <div class="col-md-8">
@@ -19,7 +20,7 @@
                             <span class="flex"><a
                                     href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a>
                                 posted:
-                                {{ $thread->title }} </span>
+                                {{ $thread->title }} </span >
 
                             @can('update', $thread)
                             <form action="{{ $thread->path() }}" method="POST">
@@ -72,8 +73,12 @@
                         </p>
 
                         <p>
-                            <subscribe-button :active="{{ $thread->isSubscribedTo ? 'true' : 'false' }}">
+                            <subscribe-button :active="{{ $thread->isSubscribedTo ? 'true' : 'false' }}" v-if="signedIn">
                             </subscribe-button>
+                            <button class="btn btn-default" 
+                            v-if="authorize('isAdmin') && ! locked" 
+                            @click="lock" 
+                            v-text="locked ? 'Unlock' : 'Lock'"></button>
                         </p>
                     </div>
                 </div>
@@ -81,6 +86,5 @@
         </div>
     </div>
 </thread-view>
-
 
 @endsection

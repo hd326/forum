@@ -116,8 +116,14 @@ class ThreadController extends Controller
             'user_id' => auth()->id(),
             'channel_id' => request('channel_id'),
             'title' => request('title'),
-            'body' => request('body')
+            'body' => request('body'),
+            //'slug' => request('title')
+            //'slug' => str_slug(request('title'))
         ]);
+
+        if (request()->wantsJson()) {
+            return response($thread, 201);
+        }
         
         return redirect($thread->path())
             ->with('flash', 'Your thread has been published!');
@@ -179,9 +185,9 @@ class ThreadController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public function update($channel, Request $request, Thread $thread)
     {
-        //
+
     }
 
     /**

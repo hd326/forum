@@ -4,6 +4,7 @@ namespace App;
 
 use Redis;
 use App\Visits;
+use App\Reply;
 use App\Events\ThreadReceivedNewReply;
 use App\Filters\ThreadFilters;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,8 @@ class Thread extends Model
     protected $with = ['creator', 'channel'];
 
     protected $appends = ['isSubscribedTo'];
+
+    protected $casts = [ 'locked' => 'boolean'];
 
     protected static function boot()
     {
@@ -39,15 +42,19 @@ class Thread extends Model
             foreach ($replies as $reply) {
                 $reply->delete();
             }
-
             //$thread->replies->each(function($reply){
             //    $reply->delete();
             //});
             //$thread->replies->each->delete();
         });
-        // you know what, this is a kind of unecessary steps and you can do it some other uncomplex way
-        // jeffrey way..... showing off... 
 
+        //static::creating(function ($thread) {
+        //    $thread->slug = str_slug($thread->title);
+        //});
+
+        static::created(function ($thread) {
+            $thread->update(['slug' => str_slug($thread->title)]);
+        });
     }
 
     public function getReplyCountAttribute()
@@ -57,7 +64,7 @@ class Thread extends Model
 
     public function path()
     {
-        return "/threads/{$this->channel->slug}/{$this->id}";
+        return "/threads/{$this->channel->slug}/{$this->slug}";
         //return '/threads/' . $this->channel->slug . '/' . $this->id;
     }
 
@@ -148,7 +155,6 @@ class Thread extends Model
         $this->subscriptions()->create([
             'user_id' => $userId ?: auth()->id()
         ]);
-
         return $this;
     }
 
@@ -175,4 +181,52 @@ class Thread extends Model
     {
         return new Visits($this);
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function setSlugAttribute($value)
+    {
+        //if (static::whereSlug($slug = str_slug($value))->exists()) {
+        //    $slug = $this->incrementSlug($slug);
+        //}
+        //$this->attributes['slug'] = $slug;
+        $slug = str_slug($value);
+
+        if (static::whereSlug($slug)->exists()) {
+            $slug = "{$slug}-{$this->id}";
+        }
+        $this->attributes['slug'] = $slug;
+    }
+
+    public function markBestReply(Reply $reply)
+    {
+        $this->update(['best_reply_id' => $reply->id]);
+    }
+
+    //public function incrementSlug($slug)
+    //{
+    //    $max = static::whereTitle($this->title)->latest('id')->value('slug');
+    //    if (is_numeric($max[-1])) {
+    //        return preg_replace_callback(('/(\d+)$/'), function($matches) {
+    //            //look for one or more digits that occur at the end of a string
+    //            //replacing 5 with 6, searching through our maximum slug
+    //            return $matches[1] + 1;
+    //        }, $max);
+    //    }
+    //    return "{$slug}-2";
+    //    //or if it's not there in numeric form, turn it to slug-2
+    //}
+
+    //public function incrementSlug($slug, $count = 2)
+    //{
+    //    $original = $slug; // foo-title-2
+    //    $count = 2;
+    //    while (static::whereSlug($slug)->exists()) {
+    //        $slug = "{$original}-" . $count++;
+    //    }
+    //    return $slug; 
+    //}
 }

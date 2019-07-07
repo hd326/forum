@@ -66,11 +66,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        do {
+            $token = str_random(25);
+        } while (User::where('confirmation_token', $token)->exists());
         return User::forceCreate([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'confirmation_token' => str_random(25),
+            //to not do the do while process
+            //'confirmation_token' => str_limit(md5($data['email'] . str_random()), 25, '')
+            //i don't understand how this code sets it back to null
         ]);
     }
 

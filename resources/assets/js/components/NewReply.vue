@@ -30,9 +30,9 @@ import 'at.js';
         },
 
         computed: {
-            signedIn() {
-                return window.App.signedIn;
-            }
+            //ignedIn() {
+            //   return window.App.signedIn;
+            //
         },
 
         mounted() {

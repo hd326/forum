@@ -21,6 +21,10 @@ class ReplyController extends Controller
 
     public function store($channelId, Thread $thread)
     {
+        if ($thread->locked) {
+            return reponse('Thread is locked', 422);
+        }
+        
         $this->validate(request(), [
             'body' => 'required'
         ]);
