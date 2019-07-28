@@ -5,39 +5,14 @@
 @endsection
 
 @section('content')
-<thread-view :thread= {{ $thread }} inline-template>
+<thread-view :thread="{{ $thread }}" inline-template>
 <!--<thread-view :data-replies-count="{{ $thread->replies_count }}" :data-locked="{{ $thread->locked }}" inline-template>-->
     <div class="container">
         <div class="row">
             <div class="col-md-8">
                 {{-- @component('components.panel') --}}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="level">
-                            {{--@if($thread->creator->avatar_path)--}}
-                            <img src="/storage/{{ $thread->creator->avatar() }}" width="25" height="25" class="mr-1">
-                            {{--@endif--}}
-                            <span class="flex"><a
-                                    href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a>
-                                posted:
-                                {{ $thread->title }} </span >
-
-                            @can('update', $thread)
-                            <form action="{{ $thread->path() }}" method="POST">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-                                <button type="submit" class="btn-btn-link">Delete Thread</button>
-                            </form>
-                            @endcan
-                        </div>
-
-                    </div>
-                    <div class="panel-body">
-                        <div class="body">
-                            {{ $thread->body }}
-                        </div>
-                    </div>
-                </div>
+                
+                @include ('threads._question')
 
                 <replies @removed="repliesCount--" @added="repliesCount++"></replies>
                 <!--:data="{{ $thread->replies }}"-->
@@ -67,7 +42,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <p>
-                            This thread was publised {{ $thread->created_at->diffForHumans() }} by
+                            This thread was published {{ $thread->created_at->diffForHumans() }} by
                             <a href="#">{{ $thread->creator->name }}</a>, and currently has
                             <span v-text="repliesCount"></span>{{-- str_plural('comment', $thread->replies_count ) --}}.
                         </p>
@@ -76,8 +51,8 @@
                             <subscribe-button :active="{{ $thread->isSubscribedTo ? 'true' : 'false' }}" v-if="signedIn">
                             </subscribe-button>
                             <button class="btn btn-default" 
-                            v-if="authorize('isAdmin') && ! locked" 
-                            @click="lock" 
+                            v-if="authorize('isAdmin')" 
+                            @click="toggleLock" 
                             v-text="locked ? 'Unlock' : 'Lock'"></button>
                         </p>
                     </div>

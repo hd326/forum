@@ -29,7 +29,8 @@
         <div class="panel-body">
             <div v-if="editing">
                 <form @submit="update">
-                <textarea class="form-control" v-model="body" required></textarea>
+                <!--<textarea class="form-control" v-model="body" required></textarea>-->
+                <wysiwyg v-model="body"></wysiwyg>
                 <button class="btn btn-xs btn-link">Update</button>
                 <button class="btn btn-xs btn-link" @click="editing = false" type="button">Cancel</button>
                 </form>

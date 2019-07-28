@@ -17,7 +17,6 @@ class Trending
             'title' => $thread->title,
             'path' => $thread->path()
         ]));
-
     }
 
     public function cacheKey()

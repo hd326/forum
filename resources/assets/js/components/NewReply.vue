@@ -2,9 +2,15 @@
     <div>
         <div v-if="signedIn">
             <div class="form-group">
-                <textarea name="body" id="body" class="form-control" placeholder="Have something to say?" v-model="body"
-                    required rows="5">
-            </textarea>
+                <wysiwyg name="body" v-model="body" placeholder="Have something to say?" :shouldClear="completed" ref="trix"></wysiwyg>
+                <!--<textarea 
+                name="body" 
+                id="body" 
+                class="form-control" 
+                placeholder="Have something to say?" 
+                v-model="body"
+                required rows="5">
+            </textarea>-->
             </div>
             <button type="submit" class="btn btn-default" @click="addReply">Post</button>
         </div>
@@ -22,10 +28,10 @@ import 'at.js';
     export default {
 
         //props: ['endpoint'],
-
         data() {
             return {
                 body: '',
+                completed: false
             }
         },
 
@@ -71,7 +77,9 @@ import 'at.js';
                     })
                     .then(({data}) => {
                         this.body = '';
+                        this.completed = true;
                         flash('Your reply has been posted.');
+                        //this.$refs.trix.$refs.trix.value = '';
                         this.$emit('created', data);
                         //which event would be need to fire when we post a reply?
                     });

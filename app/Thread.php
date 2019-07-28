@@ -9,11 +9,13 @@ use App\Events\ThreadReceivedNewReply;
 use App\Filters\ThreadFilters;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+//use Laravel\Scout\Searchable;
 
 class Thread extends Model
 {
     // added b/c mass assignment exception (array)
     use RecordsActivity, RecordsVisits;
+    //use RecordsActivity, RecordsVisits, Searchable;
     
     protected $guarded = [];
 
@@ -229,4 +231,14 @@ class Thread extends Model
     //    }
     //    return $slug; 
     //}
+    public function toSearchableArray()
+    {
+        return $this->toArray() + ['path' => $this->path()];
+    }
+
+    public function getBodyAttribute($body)
+    {
+        //reference name, get attribute
+        return \Purify::clean($body);
+    }
 }

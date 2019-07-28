@@ -13,17 +13,46 @@ import SubscribeButton from '../components/SubscribeButton.vue';
                 //repliesCount: this.initialRepliesCount,
                 //locked: this.dataLocked
                 repliesCount: this.thread.replies_count,
-                locked: this.thread.locked
+                locked: this.thread.locked,
+                title: this.thread.title,
+                body: this.thread.body,
+                form: {
+                    title: this.thread.title,
+                    body: this.thread.body
+                },
+                editing: false,
             };
         },
 
         methods: {
             toggleLock () {
-                axios.post[this.locked ? 'deleted' : 'post']('/locked-threads/' + this.thread.slug);
+                let uri = `/locked-threads/` + this.thread.slug;
+                axios[this.locked ? 'delete' : 'post'](uri);
                 
                 this.locked = ! this.locked;
+            },
+
+            update () {
+                //axios
+                // /threads/channel/thread-slug
+                let uri = `/threads/${this.thread.channel.slug}/${this.thread.slug}`;
+                axios.patch(uri, this.form).then(() => {
+                    this.editing = false;
+                    this.title = this.form.title;
+                    this.body = this.form.body;
+                    ('Your thread has been updated.');
+                })
+            },
+
+            resetForm () {
+                this.form = {
+                    title:this.thread.title,
+                    body:this.thread.body,
+                };
+                this.editing = false;
             }
+            
         }
     }
-
+ 
 </script>

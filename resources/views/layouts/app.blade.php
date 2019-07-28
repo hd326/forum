@@ -14,6 +14,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.1.1/trix.css">
     <!--<link rel="stylesheet" href="/css/vendor/jquery.atwho.css">-->
 
     <script>
@@ -22,7 +23,7 @@
             'user' => Auth::user(),
             'signedIn' => Auth::check()
         ]) !!};
-        </script>
+    </script>
         
     <style>
     body{
@@ -33,6 +34,9 @@
     .level{
         display:flex;
         align-items:center;
+    }
+    .level-item {
+        margin-right:1em;
     }
     .flex{
         flex: 1; 
@@ -46,19 +50,17 @@
     [v-cloak] {
         display: none;
     }
+    .ais-highlight > em { background: yellow; font-style: normal; }
     </style>
     @yield('header')
 </head>
 <body>
     <div id="app">
-        @include ('layouts.nav')
+        @include('layouts.nav')
 
         @yield('content')
     <flash message="{{ session('flash') }}"></flash>
     </div>
-
-
-
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
