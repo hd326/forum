@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Redis;
+//use Redis;
 use App\Visits;
 use App\Reply;
 use App\Events\ThreadReceivedNewReply;
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     // added b/c mass assignment exception (array)
-    use RecordsActivity, RecordsVisits;
+    use RecordsActivity; //RecordsVisits;
     //use RecordsActivity, RecordsVisits, Searchable;
     
     protected $guarded = [];
@@ -152,17 +152,17 @@ class Thread extends Model
 
     // but where does the $query come from?
 
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
     public function subscribe($userId = null)
     {
         $this->subscriptions()->create([
             'user_id' => $userId ?: auth()->id()
         ]);
         return $this;
-    }
-
-    public function subscriptions()
-    {
-        return $this->hasMany(ThreadSubscription::class);
     }
 
     public function unsubscribe($userId = null)
@@ -179,10 +179,10 @@ class Thread extends Model
             ->exists();
     }
 
-    public function visits()
+    /*public function visits()
     {
         return new Visits($this);
-    }
+    }*/
 
     public function getRouteKeyName()
     {

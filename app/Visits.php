@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+/*namespace App;
 
 use Redis;
 
@@ -31,3 +31,4 @@ class Visits
     }
     // add resetting for testing
 }
+*/

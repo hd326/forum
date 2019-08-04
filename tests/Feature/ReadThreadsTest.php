@@ -111,7 +111,7 @@ class ThreadsTest extends TestCase
         $threadWithNoReplies = $this->thread;
 
         $response = $this->getJson('threads?popular=1')->json();
-        $this->assertEquals([3,2,0], array_column($response, 'replies_count'));
+        $this->assertEquals([3,2,0], array_column($response['data'], 'replies_count'));
     }
 
     /** @test */
@@ -121,7 +121,7 @@ class ThreadsTest extends TestCase
         create('App\Reply', ['thread_id' => $thread->id]);
 
         $response = $this->getJson('threads?unanswered=1')->json();
-        $this->assertCount(1, $response);
+        $this->assertCount(1, $response['data']);
     }
 
     /** @test */
@@ -134,7 +134,7 @@ class ThreadsTest extends TestCase
         $response = $this->getJson($thread->path() . '/replies')->json();
 
         //dd($response);
-        $this->assertCount(1, $response['data']);
+        $this->assertCount(2, $response['data']);
         $this->assertEquals(2, $response['total']);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Redis;
+//use Redis;
 use App\Filters\ThreadFilters;
 use App\Rules\Recaptcha;
 use App\Channel;
@@ -156,7 +156,6 @@ class ThreadController extends Controller
         //    'title' => $thread->title,
         //    'path' => $thread->path()
         //]));
-
         $trending->push($thread);
 
         //$thread->recordVisit();

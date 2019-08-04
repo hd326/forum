@@ -14,7 +14,7 @@ class ProfilesController extends Controller
         return view('profiles.show', [
             'profileUser' => $user,
             //'threads' => $user->threads()->paginate(1)
-            'activities' => $activities
+            'activities' => $activities,
             //we want something like activity()
         ]);
     }

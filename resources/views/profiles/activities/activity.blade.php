@@ -12,6 +12,7 @@
         </div>
     </div>
     <div class="panel-body">
+        
         <div class="body">
             {{ $activity->activitiable->body }}
         </div>

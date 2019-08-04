@@ -69,7 +69,7 @@ return [
         ],
 
         'redis' => [
-            'driver' => 'redis',
+            'driver' => 'file',
             'connection' => 'default',
         ],
 
